@@ -84,3 +84,4 @@ jobs:
           tags: |
             ${{ steps.image-name.outputs.name }}:sha-${{ github.sha }}
             ${{ steps.image-name.outputs.name }}:build-${{ github.run_number }}-${{ github.run_attempt }}
+            ${{ steps.image-name.outputs.name }}:latest
