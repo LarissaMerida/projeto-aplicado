@@ -37,7 +37,7 @@ jobs:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          port: ${{ secrets.SSH_PORT }} 
+          port: ${{ secrets.SSH_PORT }}
           script_stop: true
           envs: GHCR_USERNAME,GHCR_TOKEN,DEPLOY_PATH,GHCR_IMAGE,IMAGE_SHA
           script: |
