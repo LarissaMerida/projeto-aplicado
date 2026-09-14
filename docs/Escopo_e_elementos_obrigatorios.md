@@ -6,7 +6,7 @@
 
 ## 📌 Visão Geral da Atividade
 
-Este documento estabelece as diretrizes técnicas e os artefatos obrigatórios para a avaliação final da disciplina de **Projeto Aplicado: Práticas de Mercado**. 
+Este documento estabelece as diretrizes técnicas e os artefatos obrigatórios para a avaliação final da disciplina de **Projeto Aplicado: Práticas de Mercado**.
 
 O objetivo é simular um ambiente de mercado real, aplicando os conceitos de *Secure by Design* e *Secure by Default* em todas as fases do ciclo de vida de uma aplicação. O projeto está estruturado em três eixos fundamentais, interligados por uma esteira de automação:
 
@@ -14,7 +14,7 @@ O objetivo é simular um ambiente de mercado real, aplicando os conceitos de *Se
 graph TD
     A[💻 Eixo 3: Desenvolvimento<br/>App Web] -->|Commit & Push| B(📦 Eixo 2: Repositório<br/>Controle de Versão Seguro)
     B -->|Implantação via CI/CD| C{☁️ Eixo 1: Infraestrutura<br/>Cloud Computing - Free Tier}
-    
+
     style A fill:#e1f5fe,stroke:#03a9f4,stroke-width:2px,color:#000000
     style B fill:#f3e5f5,stroke:#9c27b0,stroke-width:2px,color:#000000
     style C fill:#e8f5e9,stroke:#4caf50,stroke-width:2px,color:#000000
@@ -104,7 +104,7 @@ graph LR
     A[💻 Antigravity<br/>Ambiente de Desenvolvimento<br/>Computador do Aluno] -->|Commit & Push| B(📦 GitHub<br/>Repositório de Código)
     B -->|Gatilho Automático| C{⚙️ GitHub Actions<br/>Pipeline CI/CD}
     C -->|Deploy Seguro| D[☁️ Ambiente de Produção<br/> Nginx/Apache em Nuvem]
-    
+
     style A fill:#e1f5fe,stroke:#03a9f4,stroke-width:2px,color:#000000
     style B fill:#f3e5f5,stroke:#9c27b0,stroke-width:2px,color:#000000
     style C fill:#fff3e0,stroke:#ff9800,stroke-width:2px,color:#000000
