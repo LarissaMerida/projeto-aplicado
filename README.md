@@ -149,9 +149,19 @@ Os comandos mínimos para validar a aplicação são:
 
 ```bash
 venv/bin/python src/manage.py check
-venv/bin/python src/manage.py test
+venv/bin/python src/manage.py test projeto_aplicado
 pre-commit run --all-files
 ```
+
+Os testes de segurança estão em `src/projeto_aplicado/tests.py` e verificam:
+
+- bloqueio da área interna para usuários anônimos;
+- acesso permitido somente após autenticação;
+- bloqueio de cadastro e logout sem token CSRF;
+- armazenamento de senhas com hash;
+- rejeição de senhas fracas, confirmações divergentes e usuários duplicados;
+- escape de conteúdo fornecido pelo usuário nos templates;
+- remoção da sessão após o logout.
 
 O teste funcional confirma que `/area-interna/` redireciona pessoas não
 autenticadas para o login, responde com sucesso para usuários autenticados e

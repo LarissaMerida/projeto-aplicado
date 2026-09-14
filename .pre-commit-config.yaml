@@ -48,6 +48,6 @@ repos:
         pass_filenames: false
       - id: django-tests
         name: Django tests
-        entry: python src/manage.py test
+        entry: python src/manage.py test projeto_aplicado
         language: system
         pass_filenames: false
