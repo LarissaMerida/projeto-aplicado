@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}Entrar | Projeto Aplicado{% endblock %}
+{% block content %}
+<main><section class="form-shell">
+    <h1>Entrar</h1>
+    <p>Volte para o seu espaço.</p>
+    <form method="post">
+        {% csrf_token %}{{ form.as_p }}
+        <button class="button lime" type="submit">Entrar</button>
+        <input type="hidden" name="next" value="{{ next }}">
+    </form>
+    <p>Ainda não tem conta? <a href="{% url 'register' %}">Cadastre-se</a>.</p>
+</section></main>
+{% endblock %}
