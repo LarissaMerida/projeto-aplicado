@@ -19,6 +19,7 @@ services:
     image: ${APP_IMAGE:-ghcr.io/larissamerida/projeto-aplicado:latest}
     build:
       context: .
+    restart: unless-stopped
     volumes:
       - .:/app
     environment:
@@ -33,6 +34,12 @@ services:
       DB_PORT: 5432
     ports:
       - "${WEB_PORT:-8000}:8000"
+    healthcheck:
+      test: ["CMD", "python", "-c", "import socket; socket.create_connection(('127.0.0.1', 8000), 2)"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 15s
     depends_on:
       db:
         condition: service_healthy
