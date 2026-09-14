@@ -1,6 +1,6 @@
 from django.contrib.auth import login
 from django.contrib.auth import views as auth_views
-from django.contrib.auth.mixins import UserPassesTestMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, TemplateView
@@ -10,6 +10,11 @@ from projeto_aplicado.forms import RegisterForm
 
 class HomeView(TemplateView):
     template_name = "home.html"
+
+
+class ProtectedView(LoginRequiredMixin, TemplateView):
+    template_name = "protected.html"
+    login_url = reverse_lazy("login")
 
 
 class LoginView(auth_views.LoginView):

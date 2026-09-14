@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}Área interna | Projeto Aplicado{% endblock %}
+{% block content %}
+<main>
+    <section class="hero">
+        <div>
+            <p>Conteúdo protegido</p>
+            <h1>Área interna.</h1>
+            <p>Olá, <strong>{{ user.username }}</strong>. Esta página só pode ser acessada por usuários autenticados.</p>
+            <div class="hero-actions">
+                <a class="button secondary" href="{% url 'home' %}">Voltar para início</a>
+            </div>
+        </div>
+        <div class="accent"><strong>02</strong><p>Autenticação verificada. Seu espaço privado está disponível.</p></div>
+    </section>
+</main>
+{% endblock %}

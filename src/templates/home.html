@@ -15,6 +15,7 @@
             {% endif %}
             <div class="hero-actions">
                 {% if user.is_authenticated %}
+                    <a class="button lime" href="{% url 'protected' %}">Acessar área interna</a>
                     <form method="post" action="{% url 'logout' %}">{% csrf_token %}<button class="button lime" type="submit">Sair da conta</button></form>
                 {% else %}
                     <a class="button lime" href="{% url 'login' %}">Entrar na conta</a>
