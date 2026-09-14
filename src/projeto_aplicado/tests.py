@@ -1,3 +1,5 @@
+import secrets
+
 from django.contrib.auth import get_user_model
 from django.test import Client, TestCase
 from django.urls import reverse
@@ -11,7 +13,7 @@ User = get_user_model()
 class AuthenticationSecurityTests(TestCase):
     def setUp(self):
         self.client = Client(enforce_csrf_checks=True)
-        self.password = "UmaSenhaForte123!"
+        self.password = f"Senha-{secrets.token_urlsafe(18)}"
         self.user = User.objects.create_user(
             username="usuario_seguro",
             password=self.password,
@@ -78,13 +80,63 @@ class AuthenticationSecurityTests(TestCase):
             self.user.pk,
         )
 
+    def test_login_nao_redireciona_para_host_externo(self):
+        csrf_token = self.csrf_token_for(reverse("login"))
+        response = self.client.post(
+            reverse("login"),
+            {
+                "username": self.user.username,
+                "password": self.password,
+                "csrfmiddlewaretoken": csrf_token,
+                "next": "https://site-malicioso.example/",
+            },
+        )
+
+        self.assertRedirects(response, reverse("home"))
+        self.assertNotIn("site-malicioso.example", response.url)
+
+    def test_login_rotaciona_a_sessao(self):
+        csrf_token = self.csrf_token_for(reverse("login"))
+        session_key_before_login = self.client.session.session_key
+
+        self.client.post(
+            reverse("login"),
+            {
+                "username": self.user.username,
+                "password": self.password,
+                "csrfmiddlewaretoken": csrf_token,
+            },
+        )
+
+        self.assertNotEqual(
+            session_key_before_login,
+            self.client.session.session_key,
+        )
+
+    def test_usuario_inativo_nao_pode_fazer_login(self):
+        self.user.is_active = False
+        self.user.save(update_fields=["is_active"])
+        csrf_token = self.csrf_token_for(reverse("login"))
+
+        response = self.client.post(
+            reverse("login"),
+            {
+                "username": self.user.username,
+                "password": self.password,
+                "csrfmiddlewaretoken": csrf_token,
+            },
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertNotIn("_auth_user_id", self.client.session)
+
     def test_login_com_senha_incorreta_nao_inicia_sessao(self):
         csrf_token = self.csrf_token_for(reverse("login"))
         response = self.client.post(
             reverse("login"),
             {
                 "username": self.user.username,
-                "password": "SenhaErrada123!",
+                "password": secrets.token_urlsafe(18),
                 "csrfmiddlewaretoken": csrf_token,
             },
         )
@@ -170,6 +222,18 @@ class AuthenticationSecurityTests(TestCase):
         self.assertFalse(form.is_valid())
         self.assertIn("já está em uso", form.errors["username"][0])
 
+    def test_formulario_rejeita_nome_de_usuario_maior_que_o_limite(self):
+        form = RegisterForm(
+            data={
+                "username": "u" * 151,
+                "password1": self.password,
+                "password2": self.password,
+            }
+        )
+
+        self.assertFalse(form.is_valid())
+        self.assertIn("username", form.errors)
+
     def test_template_escapa_conteudo_fornecido_pelo_usuario(self):
         self.user.username = "<script>alert('x')</script>"
         self.user.save(update_fields=["username"])
@@ -179,6 +243,18 @@ class AuthenticationSecurityTests(TestCase):
 
         self.assertNotContains(response, "<script>alert('x')</script>")
         self.assertContains(response, "&lt;script&gt;")
+
+    def test_respostas_negam_embutir_a_aplicacao_em_iframe(self):
+        response = self.client.get(reverse("home"))
+
+        self.assertEqual(response["X-Frame-Options"], "DENY")
+
+    def test_formularios_renderizam_token_csrf(self):
+        login_response = self.client.get(reverse("login"))
+        register_response = self.client.get(reverse("register"))
+
+        self.assertContains(login_response, 'name="csrfmiddlewaretoken"')
+        self.assertContains(register_response, 'name="csrfmiddlewaretoken"')
 
     def test_logout_remove_a_sessao(self):
         client = Client()

@@ -128,6 +128,22 @@ Localização da mitigação:
 - `src/projeto_aplicado/settings.py`, configuração `TEMPLATES` com
 	`APP_DIRS=True`.
 
+### 4. A07:2025 - Authentication Failures
+
+O fluxo de autenticação rejeita credenciais incorretas e usuários inativos,
+rotaciona o identificador de sessão após o login e encerra a sessão no logout.
+O acesso à área interna também depende da autenticação no servidor, e não
+somente da interface.
+
+Localização da mitigação:
+
+- `src/projeto_aplicado/views.py`, classes `LoginView`, `LogoutView` e
+	`ProtectedView`.
+- `src/projeto_aplicado/settings.py`, configurações `LOGIN_URL`,
+	`LOGIN_REDIRECT_URL` e `LOGOUT_REDIRECT_URL`.
+- `src/projeto_aplicado/tests.py`, testes de login inválido, usuário inativo,
+	rotação de sessão e logout.
+
 ### Controles adicionais
 
 Os formulários de login, cadastro e logout incluem `{% csrf_token %}`. O
@@ -160,7 +176,13 @@ Os testes de segurança estão em `src/projeto_aplicado/tests.py` e verificam:
 - bloqueio de cadastro e logout sem token CSRF;
 - armazenamento de senhas com hash;
 - rejeição de senhas fracas, confirmações divergentes e usuários duplicados;
+- rejeição de nomes de usuário acima do limite permitido;
+- bloqueio de login para usuários inativos;
+- prevenção de redirecionamento para host externo após o login;
+- rotação do identificador de sessão após autenticação;
 - escape de conteúdo fornecido pelo usuário nos templates;
+- cabeçalho `X-Frame-Options` contra clickjacking;
+- presença de tokens CSRF nos formulários;
 - remoção da sessão após o logout.
 
 O teste funcional confirma que `/area-interna/` redireciona pessoas não
