@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}Cadastro | Projeto Aplicado{% endblock %}
+{% block content %}
+<main><section class="form-shell">
+    <h1>Criar conta</h1>
+    <p>Leva só um momento para começar.</p>
+    <form method="post">
+        {% csrf_token %}{{ form.as_p }}
+        <button class="button lime" type="submit">Criar cadastro</button>
+    </form>
+    <p>Já tem uma conta? <a href="{% url 'login' %}">Entre aqui</a>.</p>
+</section></main>
+{% endblock %}

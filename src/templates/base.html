@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Projeto Aplicado{% endblock %}</title>
+    <style>
+        :root { --ink: #17211b; --muted: #657067; --cream: #f4f0e7; --green: #285943; --lime: #d4ed72; --line: #d9dfd5; }
+        * { box-sizing: border-box; }
+        body { margin: 0; color: var(--ink); background: var(--cream); font-family: Georgia, "Times New Roman", serif; }
+        nav { display: flex; align-items: center; justify-content: space-between; max-width: 1120px; margin: auto; padding: 28px 24px; }
+        .brand { color: var(--green); font-size: 1.2rem; font-weight: bold; text-decoration: none; letter-spacing: .02em; }
+        .nav-actions { display: flex; align-items: center; gap: 18px; font-family: Arial, sans-serif; font-size: .9rem; }
+        a { color: var(--green); }
+        .button { display: inline-block; border: 1px solid var(--green); border-radius: 999px; padding: 12px 20px; color: white; background: var(--green); text-decoration: none; font: 600 .9rem Arial, sans-serif; cursor: pointer; }
+        .button.secondary { color: var(--green); background: transparent; }
+        .button.lime { color: var(--ink); background: var(--lime); border-color: var(--lime); }
+        .logout { border: 0; color: var(--green); background: transparent; font: inherit; cursor: pointer; }
+        main { max-width: 1120px; margin: auto; padding: 60px 24px 100px; }
+        .hero { display: grid; grid-template-columns: 1.25fr .75fr; gap: 72px; align-items: center; min-height: 510px; }
+        h1 { max-width: 720px; margin: 0 0 24px; font-size: clamp(3.5rem, 8vw, 7.5rem); line-height: .88; font-weight: 400; letter-spacing: -.04em; }
+        .hero p { max-width: 470px; color: var(--muted); font: 1.08rem/1.6 Arial, sans-serif; }
+        .hero-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 32px; }
+        .accent { padding: 34px; border-radius: 22px; background: var(--green); color: var(--cream); transform: rotate(3deg); }
+        .accent strong { display: block; margin-bottom: 60px; color: var(--lime); font: 700 4.5rem/1 Arial, sans-serif; }
+        .accent p { color: var(--cream); font: 1.2rem/1.35 Georgia, serif; }
+        .form-shell { max-width: 480px; margin: 30px auto; padding: 40px; border: 1px solid var(--line); border-radius: 18px; background: #fbfaf6; }
+        .form-shell h1 { font-size: 3rem; }
+        label { display: block; margin: 18px 0 7px; font: 600 .85rem Arial, sans-serif; }
+        input { width: 100%; padding: 13px; border: 1px solid #bfc9bd; border-radius: 7px; font: 1rem Arial, sans-serif; }
+        .helptext, .errorlist { color: var(--muted); font: .78rem/1.5 Arial, sans-serif; }
+        .errorlist { padding: 0; color: #9b3d31; list-style: none; }
+        @media (max-width: 720px) { nav { padding: 22px 18px; } .nav-actions { gap: 10px; } .nav-actions > a:first-child { display: none; } main { padding: 30px 18px 70px; } .hero { grid-template-columns: 1fr; gap: 40px; } h1 { font-size: 4rem; } .accent { max-width: 360px; } }
+    </style>
+</head>
+<body>
+    <nav>
+        <a class="brand" href="{% url 'home' %}">Projeto Aplicado</a>
+        <div class="nav-actions">
+            {% if user.is_authenticated %}
+                <span>Olá, {{ user.username }}</span>
+                <form method="post" action="{% url 'logout' %}">
+                    {% csrf_token %}<button class="logout" type="submit">Sair</button>
+                </form>
+            {% else %}
+                <a href="{% url 'login' %}">Entrar</a>
+                <a class="button" href="{% url 'register' %}">Criar cadastro</a>
+            {% endif %}
+        </div>
+    </nav>
+    {% block content %}{% endblock %}
+</body>
+</html>

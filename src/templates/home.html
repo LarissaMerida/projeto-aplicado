@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}Início | Projeto Aplicado{% endblock %}
+{% block content %}
+<main>
+    <section class="hero">
+        <div>
+            {% if user.is_authenticated %}
+                <p>Seu espaço está pronto.</p>
+                <h1>Bom te ver por aqui.</h1>
+                <p>Você está conectado como <strong>{{ user.username }}</strong>. Continue de onde parou.</p>
+            {% else %}
+                <p>Uma nova forma de começar.</p>
+                <h1>Ideias ganham movimento.</h1>
+                <p>Entre no seu espaço para acompanhar o Projeto Aplicado ou crie uma conta em poucos passos.</p>
+            {% endif %}
+            <div class="hero-actions">
+                {% if user.is_authenticated %}
+                    <form method="post" action="{% url 'logout' %}">{% csrf_token %}<button class="button lime" type="submit">Sair da conta</button></form>
+                {% else %}
+                    <a class="button lime" href="{% url 'login' %}">Entrar na conta</a>
+                    <a class="button secondary" href="{% url 'register' %}">Fazer cadastro</a>
+                {% endif %}
+            </div>
+        </div>
+        <div class="accent"><strong>01</strong><p>Um ponto de partida simples para transformar intenção em prática.</p></div>
+    </section>
+</main>
+{% endblock %}
