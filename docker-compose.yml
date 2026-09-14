@@ -20,8 +20,6 @@ services:
     build:
       context: .
     restart: unless-stopped
-    volumes:
-      - .:/app
     environment:
       DJANGO_SECRET_KEY: ${DJANGO_SECRET_KEY:-django-insecure-development-only}
       DJANGO_DEBUG: ${DJANGO_DEBUG:-True}
@@ -35,7 +33,7 @@ services:
     ports:
       - "${WEB_PORT:-8000}:8000"
     healthcheck:
-      test: ["CMD", "python", "-c", "import socket; socket.create_connection(('127.0.0.1', 8000), 2)"]
+      test: ["CMD", "python", "-c", "import urllib.request; response = urllib.request.urlopen('http://127.0.0.1:8000/', timeout=2); assert response.status == 200"]
       interval: 10s
       timeout: 5s
       retries: 5
