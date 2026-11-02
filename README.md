@@ -49,6 +49,12 @@ docker compose up --build
 As configurações sensíveis são fornecidas por variáveis de ambiente, incluindo
 `DJANGO_SECRET_KEY`, `DB_PASSWORD` e `DJANGO_DEBUG`.
 
+Em produção atrás do Nginx com HTTPS, defina `DJANGO_ALLOWED_HOSTS` com o IP
+público e `DJANGO_CSRF_TRUSTED_ORIGINS` com a origem HTTPS exata, incluindo
+esquema e sem barra final (por exemplo, `https://203.0.113.10`). O Compose passa
+essa variável ao container Django; não use curingas para liberar origens
+arbitrárias.
+
 ## Organização principal
 
 - `src/projeto_aplicado/forms.py`: formulário de cadastro e suas validações.
