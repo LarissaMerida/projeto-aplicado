@@ -1,7 +1,7 @@
 import secrets
 
 from django.contrib.auth import get_user_model
-from django.test import Client, TestCase
+from django.test import Client, TestCase, override_settings
 from django.urls import reverse
 
 from projeto_aplicado.forms import RegisterForm
@@ -79,6 +79,42 @@ class AuthenticationSecurityTests(TestCase):
             int(self.client.session["_auth_user_id"]),
             self.user.pk,
         )
+
+    @override_settings(CSRF_TRUSTED_ORIGINS=["https://137.131.254.250"])
+    def test_login_aceita_origem_https_publica_confiavel(self):
+        csrf_token = self.csrf_token_for(reverse("login"))
+        response = self.client.post(
+            reverse("login"),
+            {
+                "username": self.user.username,
+                "password": self.password,
+                "csrfmiddlewaretoken": csrf_token,
+            },
+            secure=True,
+            HTTP_ORIGIN="https://137.131.254.250",
+        )
+
+        self.assertRedirects(response, reverse("home"))
+        self.assertEqual(
+            int(self.client.session["_auth_user_id"]),
+            self.user.pk,
+        )
+
+    @override_settings(CSRF_TRUSTED_ORIGINS=["https://137.131.254.250"])
+    def test_login_rejeita_origem_https_nao_confiavel(self):
+        csrf_token = self.csrf_token_for(reverse("login"))
+        response = self.client.post(
+            reverse("login"),
+            {
+                "username": self.user.username,
+                "password": self.password,
+                "csrfmiddlewaretoken": csrf_token,
+            },
+            secure=True,
+            HTTP_ORIGIN="https://origem-nao-confiavel.example",
+        )
+
+        self.assertEqual(response.status_code, 403)
 
     def test_login_nao_redireciona_para_host_externo(self):
         csrf_token = self.csrf_token_for(reverse("login"))
