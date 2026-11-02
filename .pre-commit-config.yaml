@@ -28,7 +28,7 @@ repos:
         pass_filenames: false
       - id: pip-audit
         name: Dependency vulnerability audit
-        entry: python -m pip_audit
+        entry: python -m pip_audit --skip-editable
         language: system
         pass_filenames: false
       - id: outdated-dependencies
